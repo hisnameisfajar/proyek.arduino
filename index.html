@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pengajuan Proposal Proyek Arduino</title>
+<style>
+:root{--n:#0b2a6f;--b:#1d4ed8;--bg:#f2f5fc;--l:#d0daf2;--t:#14213d;--m:#56648a;--ok:#0d8a47;--er:#c4271c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t);font:16px/1.55 system-ui,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:780px;margin:0 auto;padding:0 14px 48px}
+header{background:var(--n);color:#fff;margin:0 -14px 16px;padding:14px 18px;display:flex;gap:12px;align-items:center}
+.logo{width:44px;height:44px;border-radius:12px;background:#fff;color:var(--n);font-weight:900;display:grid;place-items:center}
+header small{opacity:.85}
+#bar{display:none;margin-bottom:14px}
+#track{height:10px;background:var(--l);border-radius:9px;overflow:hidden}
+#fill{height:100%;background:var(--b);width:0;transition:width .25s}
+#stp{font-size:14px;color:var(--m)}
+.card{background:#fff;border:1px solid var(--l);border-radius:18px;padding:20px}
+h1{margin:0 0 4px;font-size:28px;line-height:1.2;color:var(--n)}
+h2{margin:0 0 10px;font-size:22px;color:var(--n)}
+h3{margin:18px 0 6px;font-size:16px}
+label{display:block;margin:12px 0 4px;font-weight:600}
+input,select,textarea{width:100%;font:inherit;border:2px solid var(--l);border-radius:10px;padding:9px 11px;background:#fff;color:var(--t);margin-top:4px}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid #93b4ff;outline-offset:1px}
+.rw{display:flex;gap:8px;align-items:center;margin:6px 0}
+.rw input,.rw select{margin:0}
+.g3 input:nth-child(1){flex:3}.g3 input:nth-child(2){flex:1}.g3 input:nth-child(3){flex:1.4}
+.x{flex:0 0 auto;width:40px;height:40px;border:0;border-radius:10px;background:#fde7e4;color:var(--er);font-size:22px;cursor:pointer}
+.btn{background:var(--b);color:#fff;border:0;border-radius:12px;padding:12px 20px;font:inherit;font-weight:700;cursor:pointer}
+.btn.alt{background:#fff;color:var(--b);border:2px solid var(--b)}
+.btn:disabled{opacity:.6;cursor:wait}
+.ghost{margin-top:8px;background:#fff;color:var(--b);border:2px dashed var(--b);border-radius:10px;padding:8px 14px;font:inherit;font-weight:700;cursor:pointer}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap}
+.hint{color:var(--m);font-size:14px;margin:2px 0}
+.chk{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
+.ck{display:flex;gap:8px;align-items:center;font-weight:500;margin:0;padding:8px 10px;border:2px solid var(--l);border-radius:10px}
+.ck input{width:20px;height:20px;margin:0}
+#er{display:none;background:#fde7e4;color:var(--er);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-weight:600}
+#er ul{margin:4px 0 0;padding-left:20px}
+.sum dt{font-weight:700;color:var(--n);margin-top:12px}
+.sum dd{margin:2px 0 0;white-space:pre-wrap}
+.sum table{width:100%;border-collapse:collapse;margin-top:4px}
+.sum td,.sum th{border:1px solid var(--l);padding:5px 8px;text-align:left;font-size:15px}
+.ok{background:#dff7e9;color:var(--ok);border-radius:12px;padding:12px 14px;font-weight:700}
+.warn{background:#fff4d6;color:#7a5a00;border-radius:12px;padding:10px 14px;margin-top:12px;font-size:14px}
+@media (max-width:520px){.g3{flex-wrap:wrap}.g3 input:nth-child(n){flex:1 1 45%}.g3 input:nth-child(1){flex:1 1 100%}}
+@media print{header,#bar,.nav,.nonprint{display:none!important}body{background:#fff}.card{border:0}}
+</style></head>
+<body><div class="wrap">
+<header><div class="logo">S1</div><div><b>SMAN 1 SLEMAN</b><br><small>Proyek Kolaborasi Informatika dengan Mata Pelajaran Lain</small></div></header>
+<div id="bar"><div id="track"><div id="fill"></div></div><div id="stp"></div></div>
+<main id="m"></main>
+</div>
+<script>
+/* KONFIGURASI: saat memakai GitHub Pages, isi API dengan URL web app Apps Script (/exec).
+   Jika disajikan langsung dari Apps Script, API boleh dikosongkan. */
+var CFG={kelas:["XII A","XII C","XII D","XII F"],mapel:["Fisika","Kimia","Biologi","Matematika","Geografi","Ekonomi","Informatika","Prakarya dan Kewirausahaan","Mata pelajaran lainnya"]};
+var API="https://script.google.com/macros/s/AKfycbzEpjz1WEyBV27X35Dxx6Z-KWTCRcYyLdQW-ye6dh-uQB7WkUjNEYf4rwzDP4532R5p/exec";
+var LIM={angg:8,alat:30,lang:30,tugas:20};
+var D={kelas:"",kel:"",angg:["","","",""],judul:"",tujuan:"",desk:"",manfaat:"",mapel:["Informatika"],lain:"",konsep:{},hub:"",alat:[{n:"",j:"",h:""}],lang:["",""],uji:"",tugas:[],r1:"",r2:"",r3:"",ref:""};
+try{var sv0=JSON.parse(localStorage.getItem("arduino-draf")||"null");if(sv0&&sv0.D)D=sv0.D}catch(e){}
+if(!D.ref)D.ref=Math.random().toString(36).slice(2)+Date.now().toString(36);
+var cur=0,SEND=false,DONE=null;
+function $(s){return document.querySelector(s)}
+function esc(t){return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function sv(){try{localStorage.setItem("arduino-draf",JSON.stringify({D:D}))}catch(e){}}
+function I(l,k,ph){return '<label>'+l+'<input maxlength="100" placeholder="'+(ph||"")+'" value="'+esc(D[k])+'" oninput="D.'+k+'=this.value;sv()"></label>'}
+function T(l,k,h,r){return '<label>'+l+(h?'<span class="hint"> '+h+'</span>':'')+'<textarea rows="'+(r||3)+'" maxlength="1000" oninput="D.'+k+'=this.value;sv()">'+esc(D[k])+'</textarea></label>'}
+function add(k){if(D[k].length>=LIM[k])return;D[k].push(k=="alat"?{n:"",j:"",h:""}:k=="tugas"?{n:"",t:""}:"");sv();draw()}
+function del(k,i){D[k].splice(i,1);sv();draw()}
+function xb(k,i){return '<button type="button" class="x" aria-label="Hapus baris" onclick="del(\''+k+'\','+i+')">×</button>'}
+function names(){return D.angg.map(function(a){return a.trim()}).filter(Boolean)}
+
+function sA(){return '<h2>A. Identitas Kelompok</h2><label>Kelas<select onchange="D.kelas=this.value;sv()"><option value="">Pilih kelas…</option>'+CFG.kelas.map(function(k){return '<option'+(D.kelas==k?' selected':'')+'>'+k+'</option>'}).join('')+'</select></label>'+I('Nama kelompok','kel')+'<h3>Anggota kelompok</h3>'+D.angg.map(function(a,i){return '<div class="rw"><input maxlength="80" placeholder="Nama anggota '+(i+1)+'" value="'+esc(a)+'" oninput="D.angg['+i+']=this.value;sv()">'+(D.angg.length>2?xb('angg',i):'')+'</div>'}).join('')+'<button type="button" class="ghost" onclick="add(\'angg\')">+ Tambah Anggota</button>'}
+function sB(){return '<h2>B. Perencanaan Proyek</h2>'+I('Apa judul proyek Arduino yang akan dibuat?','judul')+T('Apa tujuan membuat proyek tersebut?','tujuan')+T('Jelaskan gambaran alat dan cara kerjanya secara singkat.','desk','',4)+T('Apa manfaat alat tersebut atau permasalahan apa yang ingin dibantu diselesaikan?','manfaat')}
+function tg(m){var i=D.mapel.indexOf(m);if(i>-1)D.mapel.splice(i,1);else D.mapel.push(m);sv();draw()}
+function sC(){return '<h2>C. Keterkaitan dengan Mata Pelajaran</h2><p class="hint">Informatika sudah terpilih sebagai bidang utama. Pilih minimal satu mata pelajaran lain yang berkaitan dengan proyekmu.</p><div class="chk">'+CFG.mapel.map(function(m){return '<label class="ck"><input type="checkbox"'+(D.mapel.indexOf(m)>-1?' checked':'')+(m=="Informatika"?' disabled':'')+' onchange="tg(\''+m+'\')">'+m+'</label>'}).join('')+'</div>'+(D.mapel.indexOf('Mata pelajaran lainnya')>-1?I('Tuliskan nama mata pelajaran lainnya','lain'):'')+D.mapel.map(function(m){var nm=m=='Mata pelajaran lainnya'?(D.lain||'mata pelajaran lainnya'):m;return '<label>Konsep atau materi yang diterapkan dari '+esc(nm)+'<textarea rows="2" maxlength="500" oninput="D.konsep[\''+m+'\']=this.value;sv()">'+esc(D.konsep[m]||"")+'</textarea></label>'}).join('')+T('Bagaimana hubungan materi tersebut dengan cara kerja alat?','hub')}
+function total(){return D.alat.reduce(function(s,a){return s+(Number(a.j)||0)*(Number(a.h)||0)},0)}
+function sD(){return '<h2>D. Alat dan Bahan</h2><p class="hint">Isi nama, jumlah, dan perkiraan harga satuan (opsional).</p>'+D.alat.map(function(a,i){return '<div class="rw g3"><input maxlength="80" placeholder="Nama alat/bahan" value="'+esc(a.n)+'" oninput="D.alat['+i+'].n=this.value;sv()"><input type="number" min="1" placeholder="Jumlah" value="'+esc(a.j)+'" oninput="D.alat['+i+'].j=this.value;sv();tot()"><input type="number" min="0" placeholder="Harga satuan" value="'+esc(a.h)+'" oninput="D.alat['+i+'].h=this.value;sv();tot()">'+(D.alat.length>1?xb('alat',i):'')+'</div>'}).join('')+'<button type="button" class="ghost" onclick="add(\'alat\')">+ Tambah Alat/Bahan</button><p><b>Perkiraan biaya: <span id="tot">Rp'+total().toLocaleString("id-ID")+'</span></b></p>'}
+function tot(){$("#tot").textContent="Rp"+total().toLocaleString("id-ID")}
+function sE(){return '<h2>E. Rencana Pembuatan</h2><p class="hint">Apa saja langkah yang akan dilakukan untuk membuat alat? Contoh: menyiapkan alat dan bahan, merangkai komponen, membuat program, menguji, memperbaiki.</p>'+D.lang.map(function(a,i){return '<div class="rw"><b>'+(i+1)+'.</b><input maxlength="200" placeholder="Langkah '+(i+1)+'" value="'+esc(a)+'" oninput="D.lang['+i+']=this.value;sv()">'+(D.lang.length>1?xb('lang',i):'')+'</div>'}).join('')+'<button type="button" class="ghost" onclick="add(\'lang\')">+ Tambah Langkah</button>'}
+function sF(){return '<h2>F. Pengujian Alat</h2>'+T('Bagaimana cara mengetahui bahwa alat yang dibuat berhasil bekerja?','uji','',5)}
+function sG(){if(!D.tugas.length)D.tugas=names().map(function(n){return {n:n,t:""}});if(!D.tugas.length)D.tugas=[{n:"",t:""}];
+return '<h2>G. Pembagian Tugas</h2>'+D.tugas.map(function(a,i){return '<div class="rw"><select style="flex:1" onchange="D.tugas['+i+'].n=this.value;sv()"><option value="">Anggota…</option>'+names().map(function(n){return '<option'+(a.n==n?' selected':'')+'>'+esc(n)+'</option>'}).join('')+'</select><input style="flex:2" maxlength="200" placeholder="Tugas atau tanggung jawab" value="'+esc(a.t)+'" oninput="D.tugas['+i+'].t=this.value;sv()">'+(D.tugas.length>1?xb('tugas',i):'')+'</div>'}).join('')+'<button type="button" class="ghost" onclick="add(\'tugas\')">+ Tambah Anggota/Tugas</button>'}
+var S=[sA,sB,sC,sD,sE,sF,sG];
+function ne(v){return String(v||"").trim().length>0}
+var V=[
+function(){var e=[];if(!D.kelas)e.push("Pilih kelas.");if(!ne(D.kel))e.push("Isi nama kelompok.");if(names().length<2)e.push("Isi minimal 2 nama anggota.");return e},
+function(){var e=[];["judul","tujuan","desk","manfaat"].forEach(function(k,i){if(!ne(D[k]))e.push("Lengkapi: "+["judul proyek","tujuan","gambaran alat dan cara kerja","manfaat"][i]+".")});return e},
+function(){var e=[];if(D.mapel.length<2)e.push("Pilih minimal satu mata pelajaran selain Informatika.");if(D.mapel.indexOf("Mata pelajaran lainnya")>-1&&!ne(D.lain))e.push("Tuliskan nama mata pelajaran lainnya.");D.mapel.forEach(function(m){if(!ne(D.konsep[m]))e.push("Isi konsep atau materi untuk "+(m=="Mata pelajaran lainnya"?(D.lain||m):m)+".")});if(!ne(D.hub))e.push("Jelaskan hubungan materi dengan cara kerja alat.");return e},
+function(){var e=[],ok=D.alat.filter(function(a){return ne(a.n)&&Number(a.j)>0});if(!ok.length)e.push("Isi minimal satu alat/bahan beserta jumlahnya.");D.alat.forEach(function(a,i){if((ne(a.n)||ne(a.j)||ne(a.h))&&!(ne(a.n)&&Number(a.j)>0))e.push("Baris "+(i+1)+": nama dan jumlah (angka lebih dari 0) wajib diisi.")});return e},
+function(){return D.lang.filter(ne).length<2?["Isi minimal 2 langkah pembuatan."]:[]},
+function(){return ne(D.uji)?[]:["Jelaskan cara pengujian alat."]},
+function(){var e=[],ok=D.tugas.filter(function(a){return ne(a.n)&&ne(a.t)});if(!ok.length)e.push("Isi minimal satu pembagian tugas.");D.tugas.forEach(function(a,i){if((a.n||ne(a.t))&&!(a.n&&ne(a.t)))e.push("Baris "+(i+1)+": pilih anggota dan isi tugas.")});return e}];
+
+function ring(){var m=D.mapel.map(function(x){var nm=x=="Mata pelajaran lainnya"?D.lain:x;return '<tr><td>'+esc(nm)+'</td><td>'+esc(D.konsep[x])+'</td></tr>'}).join("");
+var al=D.alat.filter(function(a){return ne(a.n)}).map(function(a,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(a.n)+'</td><td>'+esc(a.j)+'</td><td>'+(a.h?'Rp'+Number(a.h).toLocaleString("id-ID"):'-')+'</td></tr>'}).join("");
+var tg2=D.tugas.filter(function(a){return a.n&&ne(a.t)}).map(function(a){return '<tr><td>'+esc(a.n)+'</td><td>'+esc(a.t)+'</td></tr>'}).join("");
+return '<dl class="sum"><dt>Kelas dan kelompok</dt><dd>'+esc(D.kelas)+' · '+esc(D.kel)+'</dd><dt>Anggota</dt><dd>'+names().map(esc).join(", ")+'</dd><dt>Judul proyek</dt><dd>'+esc(D.judul)+'</dd><dt>Tujuan</dt><dd>'+esc(D.tujuan)+'</dd><dt>Gambaran alat dan cara kerja</dt><dd>'+esc(D.desk)+'</dd><dt>Manfaat</dt><dd>'+esc(D.manfaat)+'</dd><dt>Mata pelajaran dan konsep</dt><dd><table><tr><th>Mata pelajaran</th><th>Konsep atau materi</th></tr>'+m+'</table></dd><dt>Hubungan dengan cara kerja alat</dt><dd>'+esc(D.hub)+'</dd><dt>Alat dan bahan</dt><dd><table><tr><th>No</th><th>Nama</th><th>Jumlah</th><th>Harga satuan</th></tr>'+al+'</table>Perkiraan biaya: Rp'+total().toLocaleString("id-ID")+'</dd><dt>Langkah pembuatan</dt><dd>'+D.lang.filter(ne).map(function(l,i){return (i+1)+'. '+esc(l)}).join("\n")+'</dd><dt>Pengujian</dt><dd>'+esc(D.uji)+'</dd><dt>Pembagian tugas</dt><dd><table><tr><th>Anggota</th><th>Tugas</th></tr>'+tg2+'</table></dd></dl>'}
+
+function draw(){var h="",n=cur;
+$("#bar").style.display=(n>=1&&n<=8)?"block":"none";
+$("#fill").style.width=Math.min(n,8)/8*100+"%";
+$("#stp").textContent=n<=7?"Langkah "+n+" dari 7":"Periksa sebelum mengirim";
+if(n==0){var dr=ne(D.kel)||ne(D.judul);
+h='<div class="card"><h1>Pengajuan Proposal Proyek Arduino</h1><p class="hint" style="font-size:16px"><b>Proyek Kolaborasi Informatika dengan Mata Pelajaran Lain</b></p><p>Setiap kelompok membuat produk atau prototipe berbasis Arduino yang memadukan Informatika dengan minimal satu mata pelajaran lain. Isi proposal ini sebelum mulai membuat alat.</p><h3>Petunjuk pengisian</h3><ol><li>Isi ketujuh bagian (A sampai G) secara berurutan.</li><li>Tekan Lanjut; isian wajib diperiksa di setiap langkah.</li><li>Periksa ringkasan, lalu tekan Kirim Proposal. Simpan nomor registrasi yang muncul.</li><li>Setelah proyek selesai, buka halaman ini lagi dan isi Refleksi Akhir memakai nomor registrasi tersebut.</li></ol><p class="hint">Isianmu tersimpan otomatis sebagai draf di perangkat ini.</p>'+(dr?'<div class="warn">Draf sebelumnya ditemukan dan dimuat kembali.</div>':'')+'<div class="nav"><button class="btn alt" onclick="go(20)">Isi Refleksi Akhir</button><button class="btn" onclick="go(1)">Mulai Mengisi Proposal</button></div><p class="hint">Refleksi Akhir diisi setelah proyek selesai, bukan sekarang.</p></div>'}
+else if(n<=7){h='<div class="card"><div id="er"></div>'+S[n-1]()+'<div class="nav"><button class="btn alt" onclick="go('+(n-1)+',true)">Kembali</button><button class="btn" onclick="nx()">'+(n==7?'Periksa Proposal':'Lanjut')+'</button></div></div>'}
+else if(n==8){h='<div class="card"><h2>Periksa Proposal</h2><p class="hint">Pastikan semua jawaban sudah benar. Setelah dikirim, proposal tidak dapat diubah dari halaman ini.</p>'+ring()+'<div id="er"></div>'+kodeBox()+'<div class="nav"><button class="btn alt" onclick="go(1,true)">Kembali ke Formulir</button><button class="btn" id="ks" onclick="kirim()">Kirim Proposal</button></div></div>'}
+else if(n==20){h=refForm()}
+else if(n==21){h='<div class="card"><div class="ok">Refleksi akhir berhasil dikirim.</div><p>Waktu pengiriman: '+esc(RDONE.waktu)+'</p>'+(RDONE.demo?'<div class="warn">Mode pratinjau: data belum tersimpan ke Google Sheets.</div>':'')+'<div class="nav"><span></span><button class="btn" onclick="go(0)">Kembali ke Beranda</button></div></div>'}
+else{h='<div class="card"><div class="ok">Proposal berhasil dikirim.</div><h2 style="margin-top:14px">Nomor registrasi: '+esc(DONE.id)+'</h2><p>Kelompok: <b>'+esc(D.kel)+'</b> · Kelas: <b>'+esc(D.kelas)+'</b><br>Waktu pengiriman: '+esc(DONE.waktu)+'</p><div class="warn">Simpan nomor registrasi ini. Kamu memerlukannya untuk mengisi Refleksi Akhir setelah proyek selesai.</div>'+(DONE.demo?'<div class="warn">Mode pratinjau: data belum tersimpan ke Google Sheets karena halaman ini tidak dijalankan lewat Google Apps Script.</div>':'')+'<div class="nav nonprint"><span></span><button class="btn" onclick="window.print()">Cetak / Simpan PDF</button></div><hr>'+ring()+'</div>'}
+$("#m").innerHTML=h;window.scrollTo(0,0)}
+function go(n,skip){if(n>1&&!skip&&cur>=1&&cur<=8){}cur=n;draw()}
+function showEr(e){var b=$("#er");if(!b)return;b.style.display=e.length?"block":"none";b.innerHTML=e.length?"Mohon lengkapi:<ul>"+e.map(function(x){return "<li>"+esc(x)+"</li>"}).join("")+"</ul>":""}
+function nx(){var e=V[cur-1]();if(e.length){showEr(e);window.scrollTo(0,0);return}cur++;draw()}
+function allErr(){var e=[];V.forEach(function(v,i){v().forEach(function(x){e.push(String.fromCharCode(65+i)+": "+x)})});return e}
+var KODE="";try{KODE=sessionStorage.getItem("ark")||""}catch(e){}
+function inGas(){return !!(window.google&&google.script&&google.script.run)}
+function kodeBox(){return API&&!inGas()?'<label>Kode akses (dari guru)<input maxlength="40" value="'+esc(KODE)+'" oninput="KODE=this.value;try{sessionStorage.setItem(\'ark\',KODE)}catch(e){}"></label>':''}
+function kirimKeServer(aksi,data,okf,badf){
+if(inGas()){var g=google.script.run.withSuccessHandler(okf).withFailureHandler(function(er){badf(er&&er.message)});if(aksi=="refleksi")g.kirimRefleksi(data);else g.kirimProposal(data);return}
+if(API){fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({aksi:aksi,kode:KODE,data:data})}).then(function(r){return r.json()}).then(okf).catch(function(){badf("Tidak dapat terhubung ke server. Periksa koneksi internet.")});return}
+badf("Mode pratinjau: server belum dikonfigurasi.");
+}
+function kirim(){if(SEND)return;var e=allErr();if(e.length){showEr(e);return}
+if(!confirm("Kirim proposal sekarang? Pastikan semua jawaban sudah benar."))return;
+SEND=true;var b=$("#ks");b.disabled=true;b.textContent="Mengirim…";
+var p=JSON.parse(JSON.stringify(D));p.angg=names();p.alat=p.alat.filter(function(a){return ne(a.n)});p.lang=p.lang.filter(ne);p.tugas=p.tugas.filter(function(a){return a.n&&ne(a.t)});p.biaya=total();
+function ok(r){SEND=false;if(!r||!r.ok){bad(r&&r.pesan);return}DONE=r;try{localStorage.removeItem("arduino-draf")}catch(x){}cur=9;draw()}
+function bad(m){SEND=false;var b2=$("#ks");if(b2){b2.disabled=false;b2.textContent="Kirim Proposal"}showEr(["Proposal BELUM terkirim. "+(m||"Periksa koneksi, lalu coba lagi.")+" Isianmu tetap aman."])}
+kirimKeServer("proposal",p,ok,bad)}
+var R={kelas:"",kel:"",id:"",r1:"",r2:"",r3:""},RDONE=null,RSEND=false;
+function RI(l,k,ph){return '<label>'+l+'<input maxlength="100" placeholder="'+(ph||"")+'" value="'+esc(R[k])+'" oninput="R.'+k+'=this.value"></label>'}
+function RT(l,k){return '<label>'+l+'<textarea rows="3" maxlength="1000" oninput="R.'+k+'=this.value">'+esc(R[k])+'</textarea></label>'}
+function refForm(){return '<div class="card"><h2>Refleksi Akhir Kelompok</h2><p class="hint">Isi setelah proyek selesai dikerjakan. Siapkan nomor registrasi yang kamu terima saat mengirim proposal.</p><div id="er"></div><label>Kelas<select onchange="R.kelas=this.value"><option value="">Pilih kelas…</option>'+CFG.kelas.map(function(k){return '<option'+(R.kelas==k?' selected':'')+'>'+k+'</option>'}).join('')+'</select></label>'+RI('Nama kelompok','kel')+RI('Nomor registrasi proposal','id','contoh: ARD-20261116-004-K7Q')+RT('1. Apakah proyek dapat diselesaikan bersama kelompok? Jelaskan.','r1')+RT('2. Kesulitan apa yang dihadapi selama mengerjakan proyek?','r2')+RT('3. Apa yang dilakukan ketika alat tidak bekerja sesuai rencana?','r3')+'<div class="nav"><button class="btn alt" onclick="go(0)">Kembali</button><button class="btn" id="kr" onclick="kirimRef()">Kirim Refleksi</button></div></div>'}
+function kirimRef(){if(RSEND)return;var e=[];if(!R.kelas)e.push("Pilih kelas.");if(!ne(R.kel))e.push("Isi nama kelompok.");if(!ne(R.id))e.push("Isi nomor registrasi proposal.");["r1","r2","r3"].forEach(function(k,i){if(!ne(R[k]))e.push("Jawab pertanyaan refleksi nomor "+(i+1)+".")});
+if(e.length){showEr(e);window.scrollTo(0,0);return}
+if(!confirm("Kirim refleksi akhir sekarang? Refleksi tidak dapat diubah setelah dikirim."))return;
+RSEND=true;var b=$("#kr");b.disabled=true;b.textContent="Mengirim…";
+function ok(r){RSEND=false;if(!r||!r.ok){bad(r&&r.pesan);return}RDONE=r;cur=21;draw()}
+function bad(m){RSEND=false;var b2=$("#kr");if(b2){b2.disabled=false;b2.textContent="Kirim Refleksi"}showEr(["Refleksi BELUM terkirim. "+(m||"Periksa koneksi, lalu coba lagi.")+" Isianmu tetap aman."])}
+var p={kelas:R.kelas,kel:R.kel.trim(),id:R.id.trim(),r1:R.r1,r2:R.r2,r3:R.r3};
+kirimKeServer("refleksi",p,ok,bad)}
+draw();
+</script></body></html>
